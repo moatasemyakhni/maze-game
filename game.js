@@ -1,4 +1,8 @@
 window.addEventListener("load", () => {
+    var TIMER_BOUND = 60 // how much time to give for timer
+    var WINNING_POINTS = 5
+    var LOSING_POINTS = 10
+    var countDown = TIMER_BOUND
     var score = 0
     var is_winning = false
     var is_cheating = false
@@ -7,8 +11,12 @@ window.addEventListener("load", () => {
     var end = document.getElementById("end")
     var stat = document.getElementById("status")
     var boundaries = document.getElementsByClassName("boundary")
-    var scoreBoard = document.getElementsByClassName("example")
+    var scoreBoard = document.getElementsByClassName("example")[0]
+    var timerBoard = document.getElementsByTagName("p")[0]
+    var timer
+    var timerOn = true
     
+    scoreBoard.innerText = "Score = " + score
     
     // once we enter the game box, leaving will be considered cheating
     game.addEventListener("mouseleave", () => {
@@ -18,7 +26,7 @@ window.addEventListener("load", () => {
     //I did not find the reset button so I considered clicking on the start will reset the score
     start.addEventListener("click", () => {
         score = 0
-        scoreBoard[0].innerText = "Score = " + score
+        scoreBoard.innerText = "Score = " + score
     })
     
     // hovering on start is considered as another try
@@ -27,8 +35,11 @@ window.addEventListener("load", () => {
         is_cheating = false
         boundariesColor("#eeeeee")
         stat.innerText = "Begin by moving your mouse over the \"S\"."
+        if(timerOn) {
+            timer = setInterval(decrementTime, 1000)
+            timerOn = false
+        }
     })
-    
     
     for(var i = 0; i < boundaries.length; i++) { 
         boundaries[i].addEventListener('mouseover', () => {
@@ -36,34 +47,58 @@ window.addEventListener("load", () => {
             if(is_winning) { 
                 boundariesColor("red")
                 is_winning = false
-                score -= 10
+                score -= LOSING_POINTS
                 stat.innerText = "You Lost!"
-                scoreBoard[0].innerText = "Score = " + score
+                scoreBoard.innerText = "Score = " + score
+                countDown = TIMER_BOUND
+                clearInterval(timer)
+                timerOn = true
             }
         })  
     }
-    
+
     end.addEventListener("mouseover", () => {
         if(is_winning) {
             if(is_cheating) {
                 boundariesColor("lightblue")
                 stat.innerText = "No Cheating :)"
             }else {
-                score += 5
+                score += WINNING_POINTS
                 stat.innerText = "You Won!"
-                scoreBoard[0].innerText = "Score = " + score
                 boundariesColor("lightgreen")
+                scoreBoard.innerText = "Score = " + score
             }
         }
+        countDown = TIMER_BOUND
+        clearInterval(timer)
+        timerOn = true
         //to avoid multiple winning in one game
         is_winning = false
     })
     
     
-    scoreBoard[0].style.paddingLeft = "10px"
+    scoreBoard.style.paddingLeft = "10px"
     function boundariesColor(color) {
         for(var i = 0; i < boundaries.length; i++) {
             boundaries[i].style.backgroundColor = color
+        }
+    }
+
+    function decrementTime() {
+        if(countDown <= TIMER_BOUND) {
+            timerBoard.innerHTML = ("timer = " + countDown)
+        }
+
+        if(countDown > 0) {
+            countDown--
+        }else {
+            clearInterval(timer)
+            countDown = TIMER_BOUND
+            timerOn = true
+            score -= LOSING_POINTS
+            is_winning = false
+            stat.innerHTML = "Times out! You Lost"
+            scoreBoard.innerText = "Score = " + score
         }
     }
     
