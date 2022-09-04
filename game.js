@@ -2,7 +2,7 @@ window.addEventListener("load", () => {
     var TIMER_BOUND = 60 // how much time to give for timer
     var WINNING_POINTS = 5
     var LOSING_POINTS = 10
-    var countDown = TIMER_BOUND
+    var countDown = TIMER_BOUND //starting point
     var score = 0
     var is_winning = false
     var is_cheating = false
@@ -16,6 +16,7 @@ window.addEventListener("load", () => {
     var timer
     var timerOn = true
     
+
     scoreBoard.innerText = "Score = " + score
     
     // once we enter the game box, leaving will be considered cheating
@@ -23,7 +24,7 @@ window.addEventListener("load", () => {
         is_cheating = true
     })
     
-    //I did not find the reset button so I considered clicking on the start will reset the score
+    //click start will reset the score
     start.addEventListener("click", () => {
         score = 0
         scoreBoard.innerText = "Score = " + score
@@ -37,7 +38,7 @@ window.addEventListener("load", () => {
         stat.innerText = "Begin by moving your mouse over the \"S\"."
         if(timerOn) {
             timer = setInterval(decrementTime, 1000)
-            timerOn = false
+            timerOn = false //to avoid calling timer multiple times
         }
     })
     
