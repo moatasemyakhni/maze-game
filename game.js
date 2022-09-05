@@ -15,8 +15,16 @@ window.addEventListener("load", () => {
     var timerBoard = document.getElementsByTagName("p")[0]
     var timer
     var timerOn = true
+    var h1 = document.getElementsByTagName("h1")[0]
+    var user = prompt("userName: ")
+    if(sessionStorage.getItem(user)) {
+        score = parseInt(sessionStorage.getItem(user))
+    }else {
+        sessionStorage.setItem(user, score.toString())
+    }
     
 
+    h1.innerHTML = "Welcome " + user.toUpperCase()
     scoreBoard.innerText = "Score = " + score
     
     // once we enter the game box, leaving will be considered cheating
@@ -49,6 +57,7 @@ window.addEventListener("load", () => {
                 boundariesColor("red")
                 is_winning = false
                 score -= LOSING_POINTS
+                sessionStorage.setItem(user, score.toString())
                 stat.innerText = "You Lost!"
                 scoreBoard.innerText = "Score = " + score
                 countDown = TIMER_BOUND
@@ -65,6 +74,7 @@ window.addEventListener("load", () => {
                 stat.innerText = "No Cheating :)"
             }else {
                 score += WINNING_POINTS
+                sessionStorage.setItem(user, score.toString())
                 stat.innerText = "You Won!"
                 boundariesColor("lightgreen")
                 scoreBoard.innerText = "Score = " + score
@@ -97,6 +107,7 @@ window.addEventListener("load", () => {
             countDown = TIMER_BOUND
             timerOn = true
             score -= LOSING_POINTS
+            sessionStorage.setItem(user, score.toString())
             is_winning = false
             stat.innerHTML = "Times out! You Lost"
             scoreBoard.innerText = "Score = " + score
